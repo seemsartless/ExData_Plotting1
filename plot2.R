@@ -1,10 +1,10 @@
 #
-# plot1.R - david Sky - david.s.toronto@gmail.com
+# plot2.R - david Sky - david.s.toronto@gmail.com
 #
 #    Exploratory Data Analysis course - Excercise 1
 #
 #    Read in the "Individual household electric power consumption Data Set" and create a
-#    bar chart (histogram) for the dates between 2007-02-01 and 2007-02-02
+#    graph for the dates between 2007-02-01 and 2007-02-02
 #
 
 # Step 1: Read in the subset of data
@@ -17,16 +17,25 @@ powerData <- read.table(file = "./exdata-data-household_power_consumption/househ
                 skip = 66637, 
                 nrows = 2879)
 
-# Add back in column names
+# Add back in the column names
 names(powerData) <- c("Date", "Time",
                 "GlobalActivePower", "GlobalReactivePower", "Voltage", "GlobalIntensity",
                 "SubMetering1", "SubMetering2", "SubMetering3")
 
+# In the second graph we need to add a new column to the table to represent
+# the date and time together - using the hint provided in the assignment:
+#
+# You may find it useful to convert the Date and Time variables to Date/Time classes in R using the 
+# strptime() and as.Date() functions
+
+# The data file represents the date as %d/%m/%Y and the time with seconds, as %H:%M:%S
+powerData$DateAndTime <- strptime(paste(powerData$Date, powerData$Time, sep=" "), "%d/%m/%Y %H:%M:%S")
+
+
 # Step #2: Plot the graph
-hist(powerData$GlobalActivePower, 
-     col = "red", 
-     main = "Global Active Power", xlab = "Global Active Power (kilowatts)")
+plot(powerData$DateAndTime, powerData$GlobalActivePower, type = "l",
+     xlab = NA, ylab = "Global Active Power (kilowatts)")
 
 # And finally, save it to disk as a PNG file
-dev.copy(png, file = "plot1.png")
+dev.copy(png, file = "plot2.png")
 dev.off()
